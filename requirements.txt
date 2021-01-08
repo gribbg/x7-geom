@@ -1,0 +1,7 @@
+bezier
+numpy
+matplotlib
+pygifsicle
+scipy
+x7-lib
+x7-testing
