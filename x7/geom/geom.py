@@ -572,8 +572,8 @@ class BBox(object):
 
     def __eq__(self, other):
         return type(self) is type(other) and \
-               self.xl == other.xl and self.yl == other.yl and \
-               self.xh == other.xh and self.yh == other.yh
+            self.xl == other.xl and self.yl == other.yl and \
+            self.xh == other.xh and self.yh == other.yh
 
     def __getitem__(self, item):
         return getattr(self, self.__slots__[item])
@@ -791,8 +791,8 @@ class Line(object):
 
     def __eq__(self, other):
         return type(self) is type(other) and \
-               self.origin == other.origin and \
-               self.direction == other.direction
+            self.origin == other.origin and \
+            self.direction == other.direction
 
     @property
     def p1(self):

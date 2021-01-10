@@ -28,7 +28,7 @@ class Mesh(object):
         )
 
     def zeros(self) -> 'VectorField':
-        return VectorField(self) 
+        return VectorField(self)
 
     def uniform(self, magnitude) -> 'VectorField':
         vf = self.zeros()

@@ -78,7 +78,7 @@ class DumpContext(object):
 
     def append(self, line):
         self.lines.append(self.prefix() + line)
-        
+
     def extend(self, lines):
         prefix = self.prefix()
         self.lines.extend([prefix + line for line in lines])
@@ -90,7 +90,7 @@ class DumpContext(object):
 class Path(object):
     """Primitive path object"""
     __slots__ = ('penbrush', 'closed', 'points')
-    
+
     def __init__(self, penbrush: PenBrush, closed: bool, points: ImagePathType):
         self.penbrush = penbrush
         if not isinstance(closed, bool):
@@ -140,8 +140,8 @@ class Elem(ABC):
     @abstractmethod
     def __eq__(self, other):
         return type(self) is type(other) and self.name == other.name \
-               and self.penbrush == other.penbrush and self.closed == other.closed \
-               and self.xform == other.xform
+            and self.penbrush == other.penbrush and self.closed == other.closed \
+            and self.xform == other.xform
 
     def draw_space(self, dc: DrawingContext):
         """

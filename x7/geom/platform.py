@@ -9,7 +9,6 @@ if sys.platform == 'ios':
     # noinspection PyUnresolvedReferences,PyPackageRequirements
     import console
 
-
     def quicklook(path):
         console.quicklook(path)
 

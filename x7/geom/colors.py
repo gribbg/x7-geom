@@ -236,7 +236,7 @@ class PensByShape(object):
 
     @staticmethod
     def make(
-            draft=True, color: Color = 'white', fill: Color = TRANSPARENT, 
+            draft=True, color: Color = 'white', fill: Color = TRANSPARENT,
             transparent: Color = TRANSPARENT, width=0.0):
         """
             Generate the colors for different types of shapes, using a standard mapping:

@@ -8,7 +8,7 @@ from .transform import *
 try:
     import bezier as bz
     BzCurve = bz.Curve
-except ModuleNotFoundError as err:
+except ModuleNotFoundError:
     bezier = None
     BzCurve = None
 
@@ -36,7 +36,7 @@ class ControlPoint(object):
 
     def __eq__(self, other):
         return self.__class__ == other.__class__ and self.c == other.c and \
-               self.dl == other.dl and self.dr == other.dr and self.kind == other.kind
+            self.dl == other.dl and self.dr == other.dr and self.kind == other.kind
 
     def close(self, other: 'ControlPoint', max_delta=1e-11):
         return (
