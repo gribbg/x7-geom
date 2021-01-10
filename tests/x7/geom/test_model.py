@@ -416,7 +416,7 @@ class TestElemRectangle(TestCaseElem):
 
     @tests(ElemRectangle.__init__)
     def test___init__(self):
-        # __init__(self, name: str, penbrush: x7.geom.colors.PenBrush, p1: gg.animate.anim.geom.BasePoint, p2: gg.animate.anim.geom.BasePoint, closed=True, xform: Union[gg.animate.anim.transform.Transform, NoneType] = None)
+        # __init__(self, name: str, penbrush: x7.geom.colors.PenBrush, p1: x7.geom.geom.BasePoint, p2: x7.geom.geom.BasePoint, closed=True, xform: Union[x7.geom.transform.Transform, NoneType] = None)
         pass  # TODO-impl x7.geom.ElemRectangle.__init__ test
 
     @tests(ElemRectangle.display)
@@ -570,17 +570,17 @@ class TestModModel(TestCaseGeomExtended):
 
     @tests(make_ellipse_cps)
     def test_make_ellipse_cps(self):
-        # make_ellipse_cps(center: x7.geom.geom.Point, r_x, r_y=None) -> List[gg.animate.anim.ControlPoint]
+        # make_ellipse_cps(center: x7.geom.geom.Point, r_x, r_y=None) -> List[x7.geom.ControlPoint]
         pass  # TODO-impl x7.geom.make_ellipse_cps test
 
     @tests(model.make_ellipse_p1p2_cps)
     def test_make_ellipse_p1p2_cps(self):
-        # make_ellipse_p1p2_cps(p1: x7.geom.geom.BasePoint, p2: gg.animate.anim.geom.BasePoint) -> List[gg.animate.anim.ControlPoint]
+        # make_ellipse_p1p2_cps(p1: x7.geom.geom.BasePoint, p2: x7.geom.geom.BasePoint) -> List[x7.geom.ControlPoint]
         pass  # TODO-impl x7.geom.make_ellipse_p1p2_cps test
 
     @tests(make_rounded_rect_cps)
     def test_make_rounded_rect_cps(self):
-        # make_rounded_rect_cps(p1: x7.geom.geom.Point, p2: gg.animate.anim.geom.Point, radius=5.0) -> List[gg.animate.anim.ControlPoint]
+        # make_rounded_rect_cps(p1: x7.geom.geom.Point, p2: x7.geom.geom.Point, radius=5.0) -> List[x7.geom.ControlPoint]
         pass  # TODO-impl x7.geom.make_rounded_rect_cps test
 
     @tests(model.test_model)

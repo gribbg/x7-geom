@@ -11,7 +11,7 @@ from .typing import *
 from .colors import *
 from .geom import *
 from .transform import *
-from x7.lib.iters import iter_rotate
+from x7.lib.iters import iter_rotate, xy_iter
 from .bezier import *
 
 
@@ -99,7 +99,7 @@ class Path(object):
         self.points = points
 
     def iterxy(self):
-        return xyiter(self.points)
+        return xy_iter(self.points)
 
     def extend(self, more_points: ImagePathType, closed=False):
         curr_points = self.points.tolist()
@@ -1477,15 +1477,19 @@ def test_model():       # pragma: nocover
                 print('   %r' % dp)
 
     if sys.platform == 'darwin':
-        from gg.animate.edit import digitize
-        digitize(draw, test)   # , {'e', 'j', 'k', 'l', 'm'})
+        try:
+            import importlib
+            x7edit = importlib.import_module('x7.view.edit')
+            x7edit.digitize(draw, test)   # , {'e', 'j', 'k', 'l', 'm'})
+        except ModuleNotFoundError:
+            pass
 
 
 def main():     # pragma: nocover
     # test_points()
     # noinspection PyUnresolvedReferences
-    import gg.animate.anim.model
-    gg.animate.anim.model.test_model()
+    import x7.geom.model
+    x7.geom.model.test_model()
 
 
 if __name__ == '__main__':      # pragma: nocover

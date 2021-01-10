@@ -795,14 +795,6 @@ class TestLine(TestCaseExtended):
 class TestModGeom(TestCase):
     """Tests for stand-alone functions in x7.geom.geom module"""
 
-    @tests(flatten_xy)
-    def test_flatten_xy(self):
-        self.assertEqual([1, 2, 3, 4], flatten_xy([(1, 2), (3, 4)]))
-
-    @tests(xyiter)
-    def test_xyiter(self):
-        self.assertEqual([(1, 2), (3, 4)], list(xyiter([1, 2, 3, 4])))
-
     @tests(polygon_area)
     def test_polygon_area(self):
         pts = [Point(1, 1), Point(2, 1), Point(2, 2), Point(1, 2)]

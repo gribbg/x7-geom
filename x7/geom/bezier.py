@@ -1,6 +1,6 @@
 import itertools
 import numpy as np
-from x7.lib.iters import iter_rotate
+from x7.lib.iters import iter_rotate, xy_flatten
 from .typing import *
 from .geom import *
 from .transform import *
@@ -665,7 +665,7 @@ def bez(raw_pts: PointList, steps=80, as_xy=False):
     path.append((dx, dy))
     if not as_xy:
         # Flatten the path
-        path = flatten_xy(path)
+        path = list(xy_flatten(path))
     # print(path)
     return path
 

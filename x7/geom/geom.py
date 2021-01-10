@@ -25,19 +25,8 @@ __all__ = [
     'BBox', 'Line',
     'ImagePathType',
     'ParallelLineError',
-    'xyiter', 'flatten_xy', 'polygon_area',
+    'polygon_area',
 ]
-
-
-def xyiter(iterable):
-    it = iter(iterable)
-    for x in it:
-        yield x, next(it)
-
-
-def flatten_xy(iterable):
-    """Flatten [(x, y)...] to [x, y, ...]"""
-    return [v for xy in iterable for v in xy]
 
 
 class SupportsRound(typing.SupportsRound):
