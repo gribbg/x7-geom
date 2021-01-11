@@ -14,17 +14,22 @@ from .typing import *
 
 
 Points = Iterable[Union['BasePoint', Number, Tuple[Number, Number]]]
-PointList = Iterable['BasePoint']
+PointList = List['BasePoint']
+PointUnionList = List[Union['BasePoint', Tuple[float, float]]]
+PointTFUnionList = List[Union['BasePoint', float, Tuple[float, float]]]
 ImagePathType = type(ImagePath.Path([]))
+XYList = List[Tuple[float, float]]
 
 
 __all__ = [
+    'BBox',
     'BasePoint',
-    'Point', 'Points', 'PointList', 'PointCalc', 'PointRelative',
-    'Vector', 'VectorRelative',
-    'BBox', 'Line',
     'ImagePathType',
+    'Line',
     'ParallelLineError',
+    'Point', 'PointCalc', 'PointList', 'PointRelative', 'Points', 'PointTFUnionList', 'PointUnionList',
+    'Vector', 'VectorRelative',
+    'XYList',
     'polygon_area',
 ]
 
@@ -790,6 +795,10 @@ class Line(object):
     @property
     def p2(self):
         return self.origin + self.direction
+
+    @property
+    def midpoint(self):
+        return self.origin + self.direction * 0.5
 
     def __add__(self, vector: 'Vector') -> 'Line':
         return Line(self.origin + vector, self.direction)

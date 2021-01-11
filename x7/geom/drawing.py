@@ -1,5 +1,6 @@
 from PIL import Image, ImageDraw, ImageFilter, ImageChops, ImageEnhance, ImageFont
 
+from x7.geom.geom import PointUnionList
 from .typing import *
 from .transform import Transform
 
@@ -131,6 +132,16 @@ class DrawingContext(object):
         # font = ImageFont.truetype('/Library/Fonts/Arial Unicode.ttf', 15)
         font = ImageFont.truetype('/System/Library/Fonts/SFNSMono.ttf', 40)
         self.draw.text((x, y), text, fill=color, font=font)
+
+    def polygon(self, points: PointUnionList, fill: Any = 'blue', outline: Any = 'black'):
+        """
+            Draw and (optionally fill) a polygon
+            :param points: List[Point() or tuple()]
+            :param fill: color name or None for no fill
+            :param outline: color name or None for no outline
+        """
+        pts = self.matrix.transform_pts(points, True)
+        self.draw.polygon(pts, fill=fill, outline=outline)
 
     def grid(self, spacing=10, center=(0, 0)):
         unused(spacing, center)

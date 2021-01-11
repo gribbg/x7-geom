@@ -748,6 +748,11 @@ class TestLine(TestCaseExtended):
         self.assertEqual(l0.p1, Point(1, 2))
         self.assertEqual(l0.p2, Point(4, 6))
 
+    # @tests(Line.midpoint)
+    def test_midpoint(self):
+        l0 = Line(Point(1, 2), Vector(2, 4))
+        self.assertEqual(Point(2, 4), l0.midpoint)
+
     @tests(Line.__add__)
     def test_add(self):
         l0 = Line(Point(1, 2), Vector(3, 4))
