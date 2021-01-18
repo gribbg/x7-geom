@@ -319,6 +319,9 @@ class Elem(ABC):
 
 
 class ElemCurve(Elem):
+    OFFSET_PT_DEBUG = False
+    OFFSET_PT_LIMIT = 100
+
     def __init__(self, name: str, penbrush: PenBrush,
                  control_points: List[ControlPoint], closed=True, xform: Optional[Transform] = None):
         super().__init__(name, penbrush, closed, xform)
@@ -371,8 +374,8 @@ class ElemCurve(Elem):
         return [ElemCurve(self.name + '_i%d' % idx, self.penbrush, cps, closed=self.closed)
                 for idx, cps in enumerate(curve_cps)]
 
-    @staticmethod
-    def offset_pt(dl: Vector, pt: BasePoint, dr: Vector, offset):
+    @classmethod
+    def offset_pt(cls, dl: Vector, pt: BasePoint, dr: Vector, offset):
         """Compute the new point that is offset from pt by <offset>"""
         if dl == Vector() or dr == Vector():
             # Do not attempt to offset if either vector is zero
@@ -389,9 +392,10 @@ class ElemCurve(Elem):
             v_offset = (dr+dl).unit()
             sin_theta = v_offset.cross(dl)
             scale = offset / sin_theta
-            if abs(scale) > 100:
-                print('Limited %s to 100' % scale)
-                scale = 100
+            if abs(scale) > cls.OFFSET_PT_LIMIT:
+                if cls.OFFSET_PT_DEBUG:
+                    print('offset_pt: Limited %.4f to %f' % (scale, cls.OFFSET_PT_LIMIT))
+                scale = cls.OFFSET_PT_LIMIT
                 # TODO-introduce an arc at this point for outside edge
             v_offset = v_offset * scale
         return pt + v_offset
