@@ -33,24 +33,31 @@ __all__ = [
 
 
 class DumpContext(object):
+    DEFAULT_IMPORTS = [
+        'from x7.geom.geom import *',
+        'from x7.geom.model import *',
+        'from x7.geom.colors import *',
+        'from x7.geom.transform import *',
+    ]
+
     def __init__(self, use_vars=True):
         self.depth = 0
         self.lines = []
         self.vars = {}
         self.prefixes = {}
         self.use_vars = use_vars
+        self.imports = [] + self.DEFAULT_IMPORTS
+
+    def add_imports(self, imports):
+        for i in imports:
+            if i not in self.imports:
+                self.imports.append(i)
 
     def output(self, just_lines=False):
         if just_lines:
             return '\n'.join(self.lines)
 
-        var_lines = [
-            'from x7.geom.geom import *',
-            'from x7.geom.model import *',
-            'from x7.geom.colors import *',
-            'from x7.geom.transform import *',
-            ''
-        ]
+        var_lines = self.imports + ['']
         for var_value, var_name in sorted(self.vars.items(), key=lambda it: (it[1], it[0])):
             var_lines.append('%s = %s' % (var_name, var_value))
         var_lines.append('')
@@ -121,6 +128,8 @@ class ControlPath(object):
 
 
 class Elem(ABC):
+    ELEM_IMPORTS = []   # Placeholder for additional imports required by Elem subclasses
+
     def __init__(self, name: str, penbrush: PenBrush, closed, xform: Optional[Transform] = None):
         self.name = name or ''
         self.penbrush = penbrush
@@ -287,14 +296,26 @@ class Elem(ABC):
     def dump_elem(self, dc: DumpContext, **kwargs) -> DumpContext:
         """Format the standard arguments for dump"""
         dc = dc or DumpContext()
+        dc.add_imports(self.ELEM_IMPORTS)
         penbrush = dc.set_var(self.penbrush, 'pen')
         basic = '%s(%r, %s, closed=%r, ' % (
             type(self).__name__, self.name, penbrush, self.closed)
         if self.xform != Transform():
             xform = dc.set_var(self.xform, 'xform')
             basic += 'xform=%s, ' % xform
-        args = ', '.join('%s=%s' % (k, '[' if v == list else repr(v)) for k, v in kwargs.items())
-        if args.endswith('=['):
+        items = list(kwargs.items())
+        if isinstance(items[-1][1], type):
+            key, val = items[-1]
+            if val is list:
+                final_arg = ['%s=[' % key]
+            else:
+                final_arg = ['%s=%s(' % (key, val.__name__)]
+            items.pop()
+        else:
+            final_arg = []
+        args = ['%s=%s' % (key, repr(val)) for key, val in items] + final_arg
+        args = ', '.join(args)
+        if final_arg:
             dc.append(basic + args)
         else:
             dc.append(basic + args + ')')
