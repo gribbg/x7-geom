@@ -179,6 +179,13 @@ class Transform(Transformer):
         cos_theta = math.cos(radians)
         return np.array([[cos_theta, sin_theta, 0], [-sin_theta, cos_theta, 0], [0, 0, 1]])
 
+    @staticmethod
+    def rotate_mat_ccw(radians):
+        """Generate rotation matrix from radians [low-level]"""
+        sin_theta = math.sin(radians)
+        cos_theta = math.cos(radians)
+        return np.array([[cos_theta, -sin_theta, 0], [sin_theta, cos_theta, 0], [0, 0, 1]])
+
     def translate(self, dx, dy):
         self._mat.pre_dot_eq(self.translate_mat(dx, dy))
         self._inverse = None
@@ -214,6 +221,12 @@ class Transform(Transformer):
     def rotate(self, degrees):
         """Counterclockwise in degrees"""
         self._mat.pre_dot_eq(self.rotate_mat(math.radians(degrees)))
+        self._inverse = None
+        return self
+
+    def rotate_ccw(self, degrees):
+        """Counterclockwise in degrees"""
+        self._mat.pre_dot_eq(self.rotate_mat_ccw(math.radians(degrees)))
         self._inverse = None
         return self
 

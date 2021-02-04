@@ -135,6 +135,16 @@ class TestTransform(TestCaseGeomExtended):
         t = Transform().rotate(-45)
         self.assertAlmostEqual((math.sqrt(1/2), math.sqrt(1/2)), t.transform(1, 0))
 
+    @tests(Transform.rotate_mat_ccw)
+    @tests(Transform.rotate_ccw)
+    def test_rotate(self):
+        t = Transform().rotate_ccw(90)
+        self.assertAlmostEqual((0, 1), t.transform(1, 0))
+        t = Transform().rotate_ccw(270)
+        self.assertAlmostEqual((0, -1), t.transform(1, 0))
+        t = Transform().rotate_ccw(45)
+        self.assertAlmostEqual((math.sqrt(1/2), math.sqrt(1/2)), t.transform(1, 0))
+
     @tests(Transform.scale_mat)
     @tests(Transform.scale)
     def test_scale(self):

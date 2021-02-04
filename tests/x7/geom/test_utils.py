@@ -1,6 +1,8 @@
 from math import sqrt
 
 from x7.lib.annotations import tests
+
+import x7.geom.plot_utils
 from tests.x7.geom.helpers import TestCaseGeomExtended
 from x7.geom import utils
 from x7.geom.geom import Point, PointRelative, Vector
@@ -62,6 +64,15 @@ class TestModUtils(TestCaseGeomExtended):
         v = sqrt(2) / 2
         self.assertAlmostEqual([Point(0, 0), Point(v, v)], path_rotate(path, -45, as_pt=True))
 
+    @tests(utils.path_rotate_ccw)
+    def test_path_rotate(self):
+        # path_rotate_ccw(path: Iterable[ForwardRef('BasePoint')], angle, as_pt=False) -> List[Union[ForwardRef('BasePoint'), Tuple[float, float]]]
+        path = [Point(0, 1), Point(1, 0)]
+        self.assertAlmostEqual([Point(-1, 0), Point(0, 1)], path_rotate_ccw(path, 90, as_pt=True))
+        self.assertAlmostEqual([(-1, 0), (0, 1)], path_rotate_ccw(path, 90))
+        v = sqrt(2) / 2
+        self.assertAlmostEqual([Point(-v, v), Point(v, v)], path_rotate_ccw(path, 45, as_pt=True))
+
     @tests(utils.path_translate)
     def test_path_translate(self):
         path = [Point(0, 0), Point(1, 2)]
@@ -70,12 +81,20 @@ class TestModUtils(TestCaseGeomExtended):
         self.assertEqual([Point(-1, -3), Point(0, -1)], path_translate(path, Point(-1, -3), as_pt=True))
         self.assertEqual([(-1, -3), (0, -1)], path_translate(path, Point(-1, -3)))
 
-    @tests(utils.plot)
+    @tests(utils.path_to_xy)
+    def test_path_to_xy(self):
+        self.assertEqual([(0, 0), (1, 2)], path_to_xy([Point(0, 0), Point(1, 2)]))
+
+    @tests(utils.path_from_xy)
+    def test_path_to_xy(self):
+        self.assertEqual([Point(0, 0), Point(1, 2)], path_from_xy([(0, 0), (1, 2)]))
+
+    @tests(x7.geom.plot_utils.plot)
     def test_plot(self):
         # plot(xy: Iterable[ForwardRef('BasePoint')], color='black', label=None, plotter=None)
         pass  # TODO-impl x7.geom.utils.plot test
 
-    @tests(utils.plot_show)
+    @tests(x7.geom.plot_utils.plot_show)
     def test_plot_show(self):
         # plot_show()
         pass  # TODO-impl x7.geom.utils.plot_show test

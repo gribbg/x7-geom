@@ -1,6 +1,7 @@
 import math
 from unittest import TestCase
 
+from tests.x7.geom.helpers import TestCaseGeomExtended
 from x7.geom.transform import Transform
 # from tests import tests
 from x7.geom import geom
@@ -264,7 +265,7 @@ class TestPointRelative(TestCase):
 
 
 @tests(Vector)
-class TestVector(TestCase):
+class TestVector(TestCaseGeomExtended):
     @tests(Vector.__init__)
     @tests(Vector.__str__)
     @tests(Vector.__repr__)
@@ -352,6 +353,16 @@ class TestVector(TestCase):
         self.assertEqual(Vector(1, 0).angle(), 0)
         self.assertAlmostEqual(Vector(1, 1).angle(), 45)
         self.assertAlmostEqual(Vector(0, 1).angle(), 90)
+
+    @tests(Vector.rotate)
+    def test_rotate(self):
+        self.assertAlmostEqual(Vector(1, 0).rotate(90), Vector(0, 1))
+        self.assertAlmostEqual(Vector(1, 0).rotate(180), Vector(-1, 0))
+        self.assertAlmostEqual(Vector(5, 0).rotate(270), Vector(0, -5))
+        self.assertAlmostEqual(Vector(1, 0).rotate(360), Vector(1, 0))
+        self.assertAlmostEqual(Vector(2, 3).rotate(90).rotate(45).rotate(90).rotate(45).rotate(90), Vector(2, 3))
+        s2 = math.sqrt(2) / 2
+        self.assertAlmostEqual(Vector(0, 1).rotate(-45), Vector(s2, s2))
 
     @tests(Vector.normal)
     def test_normal(self):

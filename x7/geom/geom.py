@@ -18,7 +18,9 @@ PointList = List['BasePoint']
 PointUnionList = List[Union['BasePoint', Tuple[float, float]]]
 PointTFUnionList = List[Union['BasePoint', float, Tuple[float, float]]]
 ImagePathType = type(ImagePath.Path([]))
-XYList = List[Tuple[float, float]]
+XYTuple = Tuple[float, float]
+XYList = List[XYTuple]
+PointOrXYList = Union[PointList, XYList]
 
 
 __all__ = [
@@ -27,9 +29,10 @@ __all__ = [
     'ImagePathType',
     'Line',
     'ParallelLineError',
-    'Point', 'PointCalc', 'PointList', 'PointRelative', 'Points', 'PointTFUnionList', 'PointUnionList',
+    'Point', 'PointCalc', 'PointRelative',
+    'PointList', 'PointOrXYList', 'Points', 'PointTFUnionList', 'PointUnionList',
     'Vector', 'VectorRelative',
-    'XYList',
+    'XYList', 'XYTuple',
     'polygon_area',
 ]
 
@@ -124,6 +127,13 @@ class Vector(typing.SupportsRound):
     def angle(self):
         """Return the angle of this vector in degrees CCW from (0, 1)"""
         return math.degrees(math.atan2(self.y, self.x))
+
+    def rotate(self, degrees) -> 'Vector':
+        """Return copy rotated by degrees CCW"""
+        rads = math.radians(degrees)
+        cos_a = math.cos(rads)
+        sin_a = math.sin(rads)
+        return Vector(cos_a*self.x - sin_a*self.y, sin_a*self.x + cos_a*self.y)
 
     def unit(self) -> 'Vector':
         """Return the unit version of this vector"""

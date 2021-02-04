@@ -564,7 +564,7 @@ class Builder(object):
             pygifsicle.optimize('/tmp/anim.gif', '/tmp/anim_opt.gif')
             platform.quicklook('/tmp/anim_opt.gif')
         elif sys.platform == 'ios':
-            # noinspection PyUnresolvedReferences
+            # noinspection PyUnresolvedReferences,PyPackageRequirements
             from images2gif import writeGif
             images[0].show()
             writeGif(output, images, duration=ms_per_frame / 1000.0)
