@@ -102,6 +102,10 @@ class TestBasePoint(TestCase):
         self.assertEqual(2, pr.x)
         self.assertEqual(4, pr.y)
 
+    # @tests(BasePoint.v)
+    def test_v(self):
+        self.assertEqual(PointRelative(1.2, 3.4, Point(0, 0)).v, Vector(1.2, 3.4))
+
     @tests(geom.BasePoint.__iter__)
     def test_iter(self):
         p = Point(3, 4.5)
@@ -155,6 +159,10 @@ class TestPoint(TestCase):
         self.assertEqual((3, 4.5), p.xy())
         self.assertEqual(3, p.x)
         self.assertEqual(4.5, p.y)
+
+    # @tests(Point.v)
+    def test_v(self):
+        self.assertEqual(Point(1.2, 3.4).v, Vector(1.2, 3.4))
 
     @tests(geom.Point.copy)
     def test_copy(self):
@@ -403,6 +411,10 @@ class TestVector(TestCaseGeomExtended):
         self.assertEqual((1.2, 3.4), v.xy())
         self.assertEqual(1.2, v.x)
         self.assertEqual(3.4, v.y)
+
+    # @tests(Vector.p)
+    def test_p(self):
+        self.assertEqual(Point(1.2, 3.4), Vector(1.2, 3.4).p)
 
     @tests(geom.Vector.__iter__)
     def test_iter(self):

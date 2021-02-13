@@ -7,6 +7,7 @@ import typing
 from abc import ABC, abstractmethod
 from typing import overload
 
+# noinspection PyPackageRequirements
 from PIL import ImagePath
 
 from x7.lib.iters import iter_rotate
@@ -113,6 +114,10 @@ class Vector(typing.SupportsRound):
     @property
     def y(self):
         return self._y
+
+    @property
+    def p(self):
+        return Point(self._x, self._y)
 
     def set(self, v: 'Vector') -> None:
         self._x, self._y = v.xy()
@@ -323,6 +328,10 @@ class BasePoint(ABC, SupportsRound):
     def y(self):
         return self.xy()[1]
 
+    @property
+    def v(self):
+        return Vector(*self.xy())
+
     def __iter__(self):
         return iter(self.xy())
 
@@ -421,6 +430,10 @@ class Point(BasePoint):
     @property
     def y(self):
         return self._y
+
+    @property
+    def v(self):
+        return Vector(self._x, self._y)
 
     def xy(self):
         """Return actual (x,y) values for this point"""
