@@ -3,10 +3,8 @@ from unittest import TestCase
 
 from tests.x7.geom.helpers import TestCaseGeomExtended
 from x7.geom.transform import Transform
-# from tests import tests
 from x7.geom import geom
 from x7.geom.geom import *
-# from .helpers import TestCaseExtended
 from x7.lib.annotations import tests
 from x7.testing.extended import TestCaseExtended
 
@@ -33,6 +31,27 @@ class TestBasePoint(TestCase):
         p = BogusBasePoint('foo')
         self.assertEqual('(0, 0)', str(p))
         self.assertEqual("BogusBasePoint(0, 0, 'foo')", repr(p))
+
+    @tests(BasePoint.__eq__)
+    @tests(BasePoint.copy)
+    def test_abstracts(self):
+        # TODO-maketests should not require tests for abstract methods
+        pass
+
+    @tests(BasePoint.__round__)
+    @tests(BasePoint.round)
+    def test_round(self):
+        z = Point(0, 0)
+        self.assertEqual(Point(1, 2), PointRelative(1.1234, 2.1234, z).round())
+        self.assertEqual(Point(1.1, 2.1), PointRelative(1.1234, 2.1234, z).round(1))
+        self.assertEqual(Point(1.14, 2.01), PointRelative(1.135, 2.0051, z).round(2))
+
+    @tests(BasePoint.close)
+    def test_close(self):
+        base = Point(1, 2)
+        self.assertTrue(base.close(Point(1, 2)))
+        self.assertTrue(base.close(Point(1+5e-12, 2)))
+        self.assertFalse(base.close(Point(1+1e-10, 2)))
 
     @tests(BasePoint.__add__)
     @tests(BasePoint.add_vector)
@@ -93,6 +112,8 @@ class TestBasePoint(TestCase):
             Point.parse(('no', ))
 
     @tests(BasePoint.xy)
+    @tests(BasePoint.x)
+    @tests(BasePoint.y)
     def test_xy(self):
         b = BogusBasePoint()
         self.assertEqual((0, 0), b.xy())
@@ -102,7 +123,7 @@ class TestBasePoint(TestCase):
         self.assertEqual(2, pr.x)
         self.assertEqual(4, pr.y)
 
-    # @tests(BasePoint.v)
+    @tests(BasePoint.v)
     def test_v(self):
         self.assertEqual(PointRelative(1.2, 3.4, Point(0, 0)).v, Vector(1.2, 3.4))
 
@@ -139,6 +160,12 @@ class TestPoint(TestCase):
         self.assertEqual(p, Point(1.0, 2.5))
         self.assertNotEqual(p, Point(1.001, 2.5))
 
+    @tests(Point.__round__)
+    def test___round__(self):
+        self.assertEqual(Point(1, 2), round(Point(1.1234, 2.1234)))
+        self.assertEqual(Point(1.1, 2.1), round(Point(1.1234, 2.1234), 1))
+        self.assertEqual(Point(1.14, 2.01), round(Point(1.135, 2.0051), 2))
+
     @tests(Point.round)
     def test_round(self):
         self.assertEqual(Point(1, 2), Point(1.1234, 2.1234).round())
@@ -151,8 +178,8 @@ class TestPoint(TestCase):
         p.setxy(1, 2)
         self.assertEqual(Point(1, 2), p)
 
-    # @tests(Point.x)
-    # @tests(Point.y)
+    @tests(Point.x)
+    @tests(Point.y)
     @tests(Point.xy)
     def test_xy(self):
         p = Point(3, 4.5)
@@ -160,17 +187,20 @@ class TestPoint(TestCase):
         self.assertEqual(3, p.x)
         self.assertEqual(4.5, p.y)
 
-    # @tests(Point.v)
+    @tests(Point.v)
     def test_v(self):
         self.assertEqual(Point(1.2, 3.4).v, Vector(1.2, 3.4))
 
     @tests(geom.Point.copy)
+    @tests(geom.Point.restore)
     def test_copy(self):
         p = Point(3, 4.5)
         q = p.copy()
         p.setxy(1, 2)
         self.assertEqual((3, 4.5), q.xy())
         self.assertEqual(Point(1, 2), p)
+        p.restore(q)
+        self.assertEqual((3, 4.5), p.xy())
 
     @tests(geom.Point.set)
     def test_set(self):
@@ -200,6 +230,7 @@ class TestPointCalc(TestCase):
         self.assertEqual("PointCalc(PointRelative(-1, 1, Point(1, 1, 'b'), 'p'), 2, 'q')", repr(q))
 
     @tests(PointCalc.copy)
+    @tests(PointCalc.__eq__)
     def test_copy(self):
         b = Point(1, 1)
         p = PointRelative(-1, 1, b)
@@ -356,6 +387,21 @@ class TestVector(TestCaseGeomExtended):
         self.assertTrue(base.close(Vector(1+5e-12, 2)))
         self.assertFalse(base.close(Vector(1+1e-10, 2)))
 
+    @tests(Vector.cross)
+    def test_cross(self):
+        base = Vector(1, 0)
+        self.assertEqual(base.cross(Vector(0, 1)), 1)
+        self.assertEqual(base.cross(Vector(0, 3)), 3)
+        self.assertEqual(base.cross(Vector(3, 0)), 0)
+        base = Vector(0, 1)
+        self.assertEqual(base.cross(Vector(1, 0)), -1)
+        self.assertEqual(base.cross(Vector(2, 0)), -2)
+        self.assertEqual(base.cross(Vector(0, 4)), 0)
+        self.assertEqual(Vector(1, 1).cross(Vector(-1, 1)), 2)
+        self.assertEqual(Vector(1, 1).cross(Vector(17, 17)), 0)
+        self.assertAlmostEqual(base.cross(base.rotate(10)), base.rotate(10).cross(base.rotate(20)))
+        self.assertAlmostEqual(base.cross(base.rotate(30)), base.rotate(20).cross(base.rotate(50)))
+
     @tests(Vector.angle)
     def test_angle(self):
         self.assertEqual(Vector(1, 0).angle(), 0)
@@ -376,6 +422,12 @@ class TestVector(TestCaseGeomExtended):
     def test_normal(self):
         self.assertEqual(Vector(0, -1), Vector(1, 0).normal())
         self.assertEqual(Vector(2, -1), Vector(1, 2).normal())
+
+    @tests(Vector.__round__)
+    def test___round__(self):
+        self.assertEqual(Vector(1, 2), round(Vector(1.1234, 2.1234)))
+        self.assertEqual(Vector(1.1, 2.1), round(Vector(1.1234, 2.1234), 1))
+        self.assertEqual(Vector(1.14, 2.01), round(Vector(1.135, 2.0051), 2))
 
     @tests(Vector.round)
     def test_round(self):
@@ -403,8 +455,8 @@ class TestVector(TestCaseGeomExtended):
         self.assertAlmostEqual(math.sqrt(2)/2, Vector(1, 1).unit().xy()[1])
         self.assertRaises(ZeroDivisionError, lambda: Vector(0, 0).unit())
 
-    # @tests(Vector.x)
-    # @tests(Vector.y)
+    @tests(Vector.x)
+    @tests(Vector.y)
     @tests(Vector.xy)
     def test_xy(self):
         v = Vector(1.2, 3.4)
@@ -412,7 +464,7 @@ class TestVector(TestCaseGeomExtended):
         self.assertEqual(1.2, v.x)
         self.assertEqual(3.4, v.y)
 
-    # @tests(Vector.p)
+    @tests(Vector.p)
     def test_p(self):
         self.assertEqual(Point(1.2, 3.4), Vector(1.2, 3.4).p)
 
@@ -492,8 +544,8 @@ class TestBBox(TestCaseExtended):
             # noinspection PyTypeChecker
             c+b
 
-    # @tests(BBox.width)
-    # @tests(BBox.height)
+    @tests(BBox.width)
+    @tests(BBox.height)
     def test_wh(self):
         b = BBox(1, 2, 3, 6)
         self.assertEqual(2, b.width)
@@ -527,8 +579,8 @@ class TestBBox(TestCaseExtended):
         b = BBox(1, 2, 3, 4)
         self.assertEqual(BBox(0, 0, 4, 6), b.expand(1, 2))
 
-    # @tests(BBox.is_none)
-    # @tests(BBox.is_empty)
+    @tests(BBox.is_none)
+    @tests(BBox.is_empty)
     def test_empty(self):
         b = BBox(None)
         self.assertTrue(b.is_none)
@@ -727,14 +779,22 @@ class TestBBox(TestCaseExtended):
         b.sort()
         self.assertEqual((1, 2, 4, 3), b.as_tuple())
 
-    # @tests(BBox.p1)
-    # @tests(BBox.p2)
-    # @tests(BBox.center)
+    @tests(BBox.p1)
+    @tests(BBox.p2)
+    @tests(BBox.center)
+    @tests(BBox.pll)
+    @tests(BBox.plh)
+    @tests(BBox.phl)
+    @tests(BBox.phh)
     def test_p1p2(self):
         b = BBox(1, 2, 3, 4)
         self.assertEqual(Point(1, 2), b.p1)
         self.assertEqual(Point(3, 4), b.p2)
         self.assertEqual(Point(2, 3), b.center)
+        self.assertEqual(Point(1, 2), b.pll)
+        self.assertEqual(Point(1, 4), b.plh)
+        self.assertEqual(Point(3, 2), b.phl)
+        self.assertEqual(Point(3, 4), b.phh)
 
 
 @tests(Line)
@@ -744,6 +804,12 @@ class TestLine(TestCaseExtended):
         l = Line(Point(0, 0), Vector(3, 4))
         self.assertEqual((0, 0), l.origin.xy())
         self.assertEqual((3, 4), l.direction.xy())
+
+    @tests(Line.__eq__)
+    def test_eq(self):
+        l0 = Line(Point(1, 2), Vector(3, 4))
+        self.assertEqual(l0, Line(Point(1, 2), Vector(3, 4)))
+        self.assertNotEqual(l0, Line(Point(1.0001, 2), Vector(3, 4)))
 
     @tests(Line.__str__)
     def test_str(self):
@@ -755,8 +821,8 @@ class TestLine(TestCaseExtended):
         l = Line(Point(1, 2), Vector(3, 4))
         self.assertEqual(repr(l), 'Line(Point(1, 2), Vector(3, 4))')
 
-    # @tests(Line.p1)
-    # @tests(Line.p2)
+    @tests(Line.p1)
+    @tests(Line.p2)
     @tests(Line.from_pts)
     def test_from_pts(self):
         l0 = Line(Point(0, 0), Vector(3, 4))
@@ -764,14 +830,14 @@ class TestLine(TestCaseExtended):
         self.assertEqual(l0.origin, l1.origin)
         self.assertEqual(0, l0.direction.cross(l1.direction))
 
-    # @tests(Line.p1)
-    # @tests(Line.p2)
+    @tests(Line.p1)
+    @tests(Line.p2)
     def test_p1p2(self):
         l0 = Line(Point(1, 2), Vector(3, 4))
         self.assertEqual(l0.p1, Point(1, 2))
         self.assertEqual(l0.p2, Point(4, 6))
 
-    # @tests(Line.midpoint)
+    @tests(Line.midpoint)
     def test_midpoint(self):
         l0 = Line(Point(1, 2), Vector(2, 4))
         self.assertEqual(Point(2, 4), l0.midpoint)
@@ -803,6 +869,11 @@ class TestLine(TestCaseExtended):
         self.assertTrue(Line(Point(0, 0), Vector(1, 1)).parallel(Line(Point(1, 2), Vector(1, 1))))
         self.assertTrue(Line(Point(0, 0), Point(2, 1)).parallel(Line(Point(1, 2), Point(3, 3))))
 
+    @tests(Line.segment_bbox)
+    def test_segment_bbox(self):
+        l = Line(Point(1, 2), Point(3, 4))
+        self.assertEqual(l.segment_bbox(), BBox(1, 2, 3, 4))
+
     @tests(Line.segment_intersection)
     def test_segment_intersection(self):
         l = Line(Point(0, 0), Point(2, 2))
@@ -816,7 +887,7 @@ class TestLine(TestCaseExtended):
         self.assertIsNone(l.segment_intersection(o))
         self.assertIsNone(o.segment_intersection(l))
         self.assertIsNone(l.segment_intersection(Line(Point(5, 7), Point(9, 9))))
-        self.assertRaises(ParallelLineError, lambda: l.intersection(Line(Point(2, 3), Vector(2, 2))))
+        self.assertRaises(ParallelLineError, lambda: l.segment_intersection(Line(Point(2, 3), Vector(2, 2))))
 
 
 @tests(geom)
