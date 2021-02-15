@@ -1,4 +1,5 @@
 import math
+from typing import cast
 from unittest import TestCase
 
 from tests.x7.geom.helpers import TestCaseGeomExtended
@@ -887,7 +888,87 @@ class TestLine(TestCaseExtended):
         self.assertIsNone(l.segment_intersection(o))
         self.assertIsNone(o.segment_intersection(l))
         self.assertIsNone(l.segment_intersection(Line(Point(5, 7), Point(9, 9))))
-        self.assertRaises(ParallelLineError, lambda: l.segment_intersection(Line(Point(2, 3), Vector(2, 2))))
+        self.assertRaises(ParallelLineError, lambda: l.segment_intersection(Line(Point(1, 0), Vector(2, 2))))
+        # TODO-this should result in a segment of overlap
+        self.assertRaises(ParallelLineError, lambda: l.segment_intersection(Line(Point(1, 1), Vector(2, 2))))
+        # TODO-this should result in Point(2,2) intersection
+        # self.assertRaises(ParallelLineError, lambda: l.segment_intersection(Line(Point(2, 2), Vector(2, 2))))
+
+
+@tests(geom.ParallelLineError)
+class TestParallelLineError(TestCase):
+    def test_ple(self):
+        l = Line(Point(0, 0), Point(2, 2))
+        self.assertRaises(ParallelLineError, lambda: l.segment_intersection(Line(Point(1, 0), Vector(2, 2))))
+
+
+@tests(geom.SupportsRound)
+class TestSupportsRound(TestCase):
+    @tests(geom.SupportsRound.__round__)
+    def test___round__(self):
+        x = geom.SupportsRound()
+        self.assertEqual(round(x), 0.0)
+
+
+@tests(geom.VectorRelative)
+class TestVectorRelative(TestCase):
+    @tests(geom.VectorRelative.__bool__)
+    def test_bool(self):
+        self.assertTrue(VectorRelative(Point(1, 1), Point(0, 0)))
+        self.assertFalse(VectorRelative(Point(0, 0), Point(0, 0)))
+
+    @tests(geom.VectorRelative.__eq__)
+    def test_eq(self):
+        self.assertEqual(VectorRelative(Point(1, 2), Point(3, 4)), VectorRelative(Point(1, 2), Point(3, 4)))
+        self.assertNotEqual(VectorRelative(Point(1, 2), Point(3, 4)), VectorRelative(Point(1, 2), Point(3, 4.1)))
+
+    @tests(geom.VectorRelative.__init__)
+    @tests(geom.VectorRelative.__repr__)
+    @tests(geom.VectorRelative.__str__)
+    @tests(geom.VectorRelative.x)
+    @tests(geom.VectorRelative.y)
+    @tests(geom.VectorRelative.xy)
+    def test_init(self):
+        p1 = Point(1, 1)
+        p2 = Point(3, 4)
+        v = VectorRelative(p1, p2)
+        self.assertEqual(v.xy(), (-2, -3))
+        self.assertEqual(v.x, -2)
+        self.assertEqual(v.y, -3)
+        self.assertEqual('VectorRelative(Point(1, 1), Point(3, 4))', repr(v))
+        self.assertEqual('V((1, 1)-(3, 4))', str(v))
+
+        v2 = VectorRelative(p2, p1)
+        self.assertEqual(v2.xy(), (2, 3))
+
+    @tests(geom.VectorRelative.__iter__)
+    def test_iter(self):
+        self.assertEqual([1, 2], list(VectorRelative(Point(2, 4), Point(1, 2))))
+
+    @tests(geom.VectorRelative.__round__)
+    @tests(geom.VectorRelative.round)
+    def test_round(self):
+        self.assertEqual(VectorRelative(Point(2, 4), Point(1, 2)), VectorRelative(Point(2, 4), Point(1, 2)).round())
+        self.assertEqual(VectorRelative(Point(2, 4), Point(1, 2)), VectorRelative(Point(2, 4), Point(0.9, 2.1)).round())
+        self.assertEqual(VectorRelative(Point(2, 4), Point(1, 2)), round(VectorRelative(Point(2, 4), Point(1, 2))))
+        self.assertEqual(VectorRelative(Point(2, 4), Point(1, 2)), round(VectorRelative(Point(2, 4), Point(0.9, 2.1))))
+
+    @tests(geom.VectorRelative.copy)
+    def test_copy(self):
+        v = VectorRelative(Point(2, 4), Point(1, 2))
+        w = v.copy()
+        self.assertEqual(v, w)
+        cast(Point, v._p1).setxy(0, 0)
+        self.assertNotEqual(v, w)
+
+    @tests(geom.VectorRelative.set)
+    @tests(geom.VectorRelative.setxy)
+    def test_set_fails(self):
+        v = VectorRelative(Point(2, 4), Point(1, 2))
+        with self.assertRaises(NotImplementedError):
+            v.set(v.fixed())
+        with self.assertRaises(NotImplementedError):
+            v.setxy(0, 0)
 
 
 @tests(geom)

@@ -216,6 +216,8 @@ class VectorRelative(Vector):
 
     def __init__(self, p1: 'BasePoint', p2: 'BasePoint'):
         super().__init__(0, 0)   # yuck
+        del self._x
+        del self._y
         self._p1 = p1
         self._p2 = p2
 
@@ -223,7 +225,7 @@ class VectorRelative(Vector):
         return 'V(%s-%s)' % (self._p1, self._p2)
 
     def __repr__(self):
-        return '%s(%s, %s)' % (self.__class__.__name__, self._p1, self._p2)
+        return '%s(%r, %r)' % (self.__class__.__name__, self._p1, self._p2)
 
     def __bool__(self):
         """Return True if x or y is non-zero"""
@@ -231,7 +233,7 @@ class VectorRelative(Vector):
         return bool(x or y)
 
     def copy(self) -> 'VectorRelative':
-        return VectorRelative(self._p1, self._p2)
+        return VectorRelative(self._p1.copy(), self._p2.copy())
 
     def __round__(self, n: int = 0):
         return VectorRelative(round(self._p1, n), round(self._p2, n))
@@ -250,6 +252,12 @@ class VectorRelative(Vector):
     def y(self):
         return self.xy()[1]
 
+    def setxy(self, x, y):
+        raise NotImplementedError
+
+    def set(self, v: 'Vector') -> None:
+        raise NotImplementedError
+
     def __iter__(self):
         return iter(self.xy())
 
@@ -257,7 +265,6 @@ class VectorRelative(Vector):
         # noinspection PyProtectedMember
         return (
             self.__class__ is other.__class__ and
-            self._x == other._x and self._y == other._y and
             self._p1 == other._p1 and self._p2 == other._p2
         )
 
