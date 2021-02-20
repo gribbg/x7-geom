@@ -5,7 +5,7 @@ from x7.geom import transform
 from x7.geom.transform import *
 from x7.geom.geom import *
 from x7.lib.annotations import tests
-from .helpers import TestCaseGeomExtended
+from x7.geom.testing import TestCaseGeomExtended
 
 
 @tests(EmptyStackError)

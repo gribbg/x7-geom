@@ -1,30 +1,14 @@
-import inspect
-import pickle
-import sys
-import os
-import zlib
-from base64 import b85encode, b85decode
-from itertools import islice
+"""
+Extended test case that includes x7.geom classes (Point, Vector, ControlPoint)
+"""
 
-from numbers import Number
-from types import ModuleType
-from typing import Any, Dict, Union
-from PIL import Image, ImageChops
-
-from unittest import util
-from unittest.case import TestCase
-from unittest.util import safe_repr
+from typing import Union
 
 from x7.geom.drawing import DrawingContext
 from x7.geom.geom import *
 from x7.geom.model import *
 from x7.geom.colors import *
 from x7.geom.transform import *
-from x7.geom import geom
-from x7.geom import model
-from x7.geom import colors
-from x7.geom import transform
-from x7.geom.typing import unused
 
 from x7.testing import support
 from x7.testing import extended
@@ -163,6 +147,7 @@ class TestCaseGeomExtended(extended.TestCaseExtended):
 
     @staticmethod
     def simple_dc(size=1000) -> DrawingContext:
+        # noinspection PyPackageRequirements
         from PIL import Image
         image = Image.new('RGBA', (size, size), 'white')
         dc = DrawingContext(image, None)

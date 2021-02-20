@@ -1,4 +1,4 @@
-from tests.x7.geom.helpers import TestCaseGeomExtended
+from x7.geom.testing import TestCaseGeomExtended
 from x7.geom.geom import Point, Vector
 
 

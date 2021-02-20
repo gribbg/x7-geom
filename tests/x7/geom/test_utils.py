@@ -3,7 +3,7 @@ from math import sqrt
 from x7.lib.annotations import tests
 
 import x7.geom.plot_utils
-from tests.x7.geom.helpers import TestCaseGeomExtended
+from x7.geom.testing import TestCaseGeomExtended
 from x7.geom import utils
 from x7.geom.geom import Point, PointRelative, Vector
 from x7.geom.utils import *

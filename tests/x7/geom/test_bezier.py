@@ -3,7 +3,7 @@ from x7.geom import bezier
 from x7.geom.geom import Point, Vector, BBox, PointRelative
 from x7.geom.transform import Transform
 from x7.lib.annotations import tests
-from .helpers import TestCaseGeomExtended
+from x7.geom.testing import TestCaseGeomExtended
 
 
 @tests(ControlPoint)

@@ -6,7 +6,7 @@ from x7.geom.model import *
 from x7.geom.geom import *
 from x7.geom.colors import *
 from x7.geom.transform import *
-from tests.x7.geom.helpers import TestCaseGeomExtended
+from x7.geom.testing import TestCaseGeomExtended
 from x7.geom.typing import *
 
 

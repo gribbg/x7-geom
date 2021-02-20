@@ -2,7 +2,7 @@ import math
 from typing import cast
 from unittest import TestCase
 
-from tests.x7.geom.helpers import TestCaseGeomExtended
+from x7.geom.testing import TestCaseGeomExtended
 from x7.geom.transform import Transform
 from x7.geom import geom
 from x7.geom.geom import *
