@@ -3,6 +3,7 @@ Extended test case that includes x7.geom classes (Point, Vector, ControlPoint)
 """
 
 from typing import Union
+import io
 
 from x7.geom.drawing import DrawingContext
 from x7.geom.geom import *
@@ -141,6 +142,56 @@ class ExtendedMatcherVector(ExtendedMatcherGeomXY):
     KLASS = Vector
 
 
+def fig_to_image(shrink=10) -> '__import__("PIL.Image").Image':
+    """Save the current Figure to a shrunken Image (used by tests)"""
+    import matplotlib.pyplot as plt
+    # noinspection PyPackageRequirements
+    from PIL import Image
+
+    plt.gca().axis('off')
+    plt.gca().axis('equal')
+    plt.gcf().subplots_adjust(0, 0, 1, 1)
+
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png')
+    buf.seek(0)
+    im: Image.Image = Image.open(buf)
+    x, y = im.size
+    im = im.convert('RGB').resize((x//shrink, y//shrink))
+    im.info = {}    # Don't bother saving/comparing .info
+    # im.show()
+    return im
+
+
+class PlotMatchContextManager:
+    """Context manager for TestCaseGeomExtended.assertMatchPlot"""
+    def __init__(self, shrink, case, func, test_case: extended.TestCaseExtended):
+        self.shrink = shrink
+        self.case = case
+        self.func = func
+        self.test_case = test_case
+        self.titley = None
+        self.titlepad = None
+
+    def __enter__(self):
+        import matplotlib.pyplot as plt
+        self.titley = plt.rcParams['axes.titley']
+        self.titlepad = plt.rcParams['axes.titlepad']
+        plt.rcParams['axes.titley'] = 1.0
+        plt.rcParams['axes.titlepad'] = -20
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        import matplotlib.pyplot as plt
+        new_data = fig_to_image(self.shrink)
+        plt.rcParams['axes.titley'] = self.titley
+        plt.rcParams['axes.titlepad'] = self.titlepad
+        msg = self.test_case.match(new_data, self.case, self.func, type(self.test_case))
+        if isinstance(msg, Exception):
+            raise msg
+        if msg is not True:
+            raise self.test_case.failureException(msg)
+
+
 class TestCaseGeomExtended(extended.TestCaseExtended):
     PICKLERS = [support.PicklerExtensionImage, PicklerExtensionGeom]
     MATCHERS = [extended.ExtendedMatcherImage, ExtendedMatcherPoint, ExtendedMatcherVector, ExtendedMatcherControlPoint]
@@ -153,3 +204,23 @@ class TestCaseGeomExtended(extended.TestCaseExtended):
         dc = DrawingContext(image, None)
         dc.points_per_curve = 5
         return dc
+
+    def assertMatchImage(self, new_data, case='0', func=None, cls=None):
+        """.assertMatch, but display images if there is an image mismatch"""
+        msg = self.match(new_data, case, func, cls)
+        if isinstance(msg, Exception):
+            raise msg
+        if msg is not True:
+            raise self.failureException(msg)
+
+    def assertMatchPlot(self, shrink=10, case='0', func=None):
+        """
+            Assert match for things plotted inside context
+            Usage:
+                with self.assertMatchPlot(case=tag):
+                    plt.plot(something)
+        """
+        if func is None:
+            import inspect
+            func = inspect.getframeinfo(inspect.currentframe().f_back).function
+        return PlotMatchContextManager(shrink, case, func, self)
