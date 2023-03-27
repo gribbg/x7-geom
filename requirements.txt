@@ -1,4 +1,4 @@
-bezier
+bezier==2020.5.19
 numpy
 matplotlib
 pygifsicle

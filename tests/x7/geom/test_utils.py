@@ -1,22 +1,51 @@
 from math import sqrt
-
 from x7.lib.annotations import tests
-
 import x7.geom.plot_utils
 from x7.geom.testing import TestCaseGeomExtended
 from x7.geom import utils
 from x7.geom.geom import Point, PointRelative, Vector
 from x7.geom.utils import *
+from x7.geom.plot_utils import plot
+import matplotlib.pyplot as plt
 
 
 @tests(utils)
 class TestModUtils(TestCaseGeomExtended):
     """Tests for stand-alone functions in x7.geom.utils module"""
+    # SAVE_MATCH = False
 
     @tests(utils.arc)
     def test_arc(self):
         # arc(r, sa, ea, c=Point(0, 0), steps=-1) -> List[Tuple[float, float]]
-        pass  # TODO-impl x7.geom.utils.arc test
+        if True:
+            print('test_arc not ready yet')
+            return
+        # TODO-finish and re-enable test_arc()
+        with self.assertMatchPlot(shrink=1):
+            for side, color in [(1, 'blue'), (-1, 'red')][:1]:
+                yv = Vector(0, 1)
+                plot(arc2p(1, Point(0, -1), yv.rotate(0).p, side=side), color)
+                plot(arc2p(1, Point(0, -1), yv.rotate(120).p, side=side), 'grey', linestyle=':')
+                plot(arc2p(1, Point(0, -1), yv.rotate(-120).p, side=-side), 'grey', linestyle='--')
+                continue
+
+                p1 = Point(0.5, 1)
+                p2 = Point(0.5, 2)
+                plot(arc2p(1, p1, p2, side=side), color)
+                plot(arc2p(0.5, p1, p2, side=side), color)
+                plot(arc2p(1, Point(1, 1), Point(2, 2), side=side), color)
+                plot(arc2p(1, Point(2, 2), Point(1, 3), side=side), color)
+                plot(arc2p(1, Point(1, 2.5), Point(0, 2.5), side=side), color)
+                plot(arc2p(1, Point(0, 3), Point(0, 1), side=side), color)
+            if False:
+                plot(arc(1, 0, 179, direction='ccw'), 'green')
+                plot(arc(1, 0, 179, direction='ccw'), 'cyan')
+                plot(arc(2, 0, 180, direction='ccw'), 'green')
+                plot(arc(2, 0, 180, direction='ccw'), 'cyan')
+                plot(arc(3, 0, 181, direction='ccw'), 'green')
+                plot(arc(3, 0, 181, direction='ccw'), 'cyan')
+            # plot(circle(5), 'grey')
+            plt.axis('equal')
 
     @tests(utils.check_point_list)
     def test_check_point_list(self):

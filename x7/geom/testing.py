@@ -186,6 +186,7 @@ class PlotMatchContextManager:
         plt.rcParams['axes.titley'] = self.titley
         plt.rcParams['axes.titlepad'] = self.titlepad
         msg = self.test_case.match(new_data, self.case, self.func, type(self.test_case))
+        plt.close()     # Close this figure, a la plt.show()
         if isinstance(msg, Exception):
             raise msg
         if msg is not True:
