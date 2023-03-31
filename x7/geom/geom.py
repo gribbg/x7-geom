@@ -60,12 +60,14 @@ class SupportsRound(typing.SupportsRound):
 class Vector(typing.SupportsRound):
     """
         The difference of two points.
+
         Operations supported:
             P-P -> V
             V+-P -> P
             P+-V -> P
             V+-V -> V
             V*/N -> V
+
         Not allowed: P+P, P*N
     """
 
@@ -408,6 +410,7 @@ def polygon_area(points: PointList):
 class Point(BasePoint):
     """
         Simple point class and base class for other point classes
+
         Point types:
             * Absolute - (x,y) represent the actual location of the point
             * Anchor - an Absolute point that should not be moved by simple animations
@@ -542,7 +545,8 @@ class BBox(object):
             - implies that .intersection(other) is True
             - implies that if .overlap(other) != other, then any(.contains(other.p{ll,lh,hl,hh})) is True
         * Intersection: BBox of intersection with other
-    .is_none operations:
+
+    .is_none behavior:
         * Contains/Touches/Overlaps is always False
         * Intersection is always empty
     """

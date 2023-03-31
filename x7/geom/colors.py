@@ -170,13 +170,13 @@ class ColorsByShape(object):
                 2. Filled shapes: thin outline in draft, filled in prod
                 3. Edged, closed shapes: thin outline in draft, fat outline in prod
                 4. Edged, filled shapes: thin outline in draft, filled & fat outline in prod
-                4a. Edged, transparent: like #4, but filled with transparent
+                5. Edged, transparent: like #4, but filled with transparent
 
         :param draft:		True for draft images
         :param color:		Color to be used for lines and normal fill
         :param fill:		Color to be used for filling edged shapes
         :param transparent:	 Color to be used for transparent fills
-        :return:
+        :returns:
         """
 
         if draft:
@@ -244,14 +244,15 @@ class PensByShape(object):
                 2. Filled shapes: thin outline in draft, filled in prod
                 3. Edged, closed shapes: thin outline in draft, fat outline in prod
                 4. Edged, filled shapes: thin outline in draft, filled & fat outline in prod
-                4a. Edged, transparent: like #4, but filled with transparent
+                5. Edged, transparent: like #4, but filled with transparent
 
         :param draft:		True for draft images
         :param color:		Color to be used for lines and normal fill
         :param fill:		Color to be used for filling edged shapes
         :param transparent:	 Color to be used for transparent fills
         :param width:       Width for all production pens
-        :return:
+        :returns:
+
         """
 
         if draft:

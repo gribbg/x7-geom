@@ -77,7 +77,7 @@ class Transformer(ABC):
             Transform numpy points to numpy points.
 
             :param np_pts:
-            :return: either NumpyArray or [(x, y, 1), ...]
+            :returns: either NumpyArray or [(x, y, 1), ...]
         """
         ...
 
@@ -100,10 +100,11 @@ class Transformer(ABC):
 
     def transform_pts(self, pts: List, flatten=False):
         """
-            Transform a list.  Returns [x, y, ...], [(x, y), ...], or [Point(x, y), ...]
+            Transform a list.
+
             :param pts: List of Point or (x, y) tuples
             :param flatten: True to return [x, y, ...].  False to return tuples or Points, depending on input
-            :return:
+            :returns: if **flatten** :code:`[x, y, ...]` else :code:`[(x, y), ...]` or :code:`[Point(x, y), ...]`
         """
         np_pts = self.transform_np_pts(self.points_to_np_points(pts))
         if flatten:
@@ -301,7 +302,9 @@ class Transform(Transformer):
 
     def push(self):
         """
-            Push/pop can be used stand-alone, or push() can be used in a 'with' statement::
+            Push/pop can be used stand-alone, or push() can be used in a
+            :code:`with` statement or standalone::
+
                 with m.push().translate(100,100).rotate(45):
                     m.transform(...)
 
@@ -309,7 +312,8 @@ class Transform(Transformer):
                 m.translate(100, 100).rotate(45)
                 m.transform(...)
                 m.pop()
-        :return:	self
+
+            :returns:	self
         """
         self.stack.append(self._mat.copy())
         return self

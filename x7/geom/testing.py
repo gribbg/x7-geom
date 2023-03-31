@@ -36,9 +36,6 @@ class PicklerExtensionGeom(support.PicklerExtension):
             meths[primitive.__name__] = primitive
         for elem in all_subclasses(Elem):
             meths[elem.__name__] = elem
-        # TODO-remove this
-        # from pprint import pp
-        # pp(dict(PicklerExtensionGeom=meths), sort_dicts=True)
         return meths
 
     def do_pickle(self, data, prefix: str):
@@ -216,8 +213,8 @@ class TestCaseGeomExtended(extended.TestCaseExtended):
 
     def assertMatchPlot(self, shrink=10, case='0', func=None):
         """
-            Assert match for things plotted inside context
-            Usage:
+            Assert match for things plotted inside a context::
+
                 with self.assertMatchPlot(case=tag):
                     plt.plot(something)
         """

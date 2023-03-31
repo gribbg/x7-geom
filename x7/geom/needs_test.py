@@ -1,6 +1,7 @@
 """
-Simple file to validate that maketests is working.  Call maketests via:
->>> from x7.shell import *; maketests('x7.sample.needs_tests')
+Simple file to validate that maketests is working.  Call maketests via::
+
+    from x7.shell import *; maketests('x7.sample.needs_tests')
 """
 
 

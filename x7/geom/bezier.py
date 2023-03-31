@@ -39,6 +39,7 @@ class ControlPoint(object):
             self.dl == other.dl and self.dr == other.dr and self.kind == other.kind
 
     def close(self, other: 'ControlPoint', max_delta=1e-11):
+        """Is this ControlPoint numerically close to `other`?"""
         return (
             self.kind == other.kind and self.c.close(other.c, max_delta) and
             self.dl.close(other.dl, max_delta) and self.dr.close(other.dr, max_delta)
@@ -53,24 +54,29 @@ class ControlPoint(object):
         """Reverse the list and all cps in it"""
         return [cp.reversed() for cp in reversed(cps)]
 
-    def fixed(self):
+    def fixed(self) -> 'ControlPoint':
+        """Return fixed (no calculation dependencies) version"""
         return ControlPoint(self.c.fixed(), self.dl.fixed(), self.dr.fixed(), self.kind)
 
-    def copy(self):
+    def copy(self) -> 'ControlPoint':
+        """Return a copy of self"""
         return ControlPoint(self.c.copy(), self.dl.copy(), self.dr.copy(), self.kind)
 
-    def bbox(self):
+    def bbox(self) -> BBox:
+        """Return a BBox containing all three points (c, l, r)"""
         bb = BBox(self.l, self.r)
         bb.grow(self.c)
         return bb
 
     def restore(self, copy):
+        """Replace values with copies of values in copy"""
         self.c = copy.c.copy()
         self.dl = copy.dl.copy()
         self.dr = copy.dr.copy()
         self.kind = copy.kind
 
-    def transform(self, matrix: Transformer):
+    def transform(self, matrix: Transformer) -> 'ControlPoint':
+        """Return copy of self transformed by matrix. Handles non-linear Transformers"""
         t_c = matrix.transform_pt(self.c)
         t_l = matrix.transform_pt(self.l)
         t_r = matrix.transform_pt(self.r)
@@ -87,15 +93,18 @@ class ControlPoint(object):
                     cp.dl = -cp.dl.length() * direction
         return cp
 
-    def round(self, digits=0):
+    def round(self, digits=0) -> 'ControlPoint':
+        """Return copy of self with all points rounded"""
         return ControlPoint(self.c.round(digits), self.dl.round(digits), self.dr.round(digits), self.kind)
 
     @property
     def l(self) -> Point:
+        """Return Left point (center + delta-left)"""
         return self.c + self.dl
 
     @property
     def r(self) -> Point:
+        """Return Right point (center + delta-right)"""
         return self.c + self.dr
 
 
@@ -150,7 +159,7 @@ def bez_intersect(
         :param as_points: Return List[Point] instead
         :param endpoints: Include endpoints in intersection set
         :param do_plot: (debugging) plot curves + points
-        :return:Return 2 x N array of s- and t-parameters where intersections occur (possibly empty)
+        :returns: 2 x N array of s- and t-parameters where intersections occur (possibly empty)
     """
     result = bez_intersect_new(cpa1, cpa2, cpb1, cpb2, endpoints=endpoints, do_plot=do_plot)
     if as_points:
@@ -172,7 +181,7 @@ def bez_intersect_new(
         :param cpb2: cp2 of curve B
         :param endpoints: Include endpoints in intersection set
         :param do_plot: (debugging) plot curves + points
-        :return: List of (intersection-point, t-value for curve A, t-value for curve B)
+        :returns: List of (intersection-point, t-value for curve A, t-value for curve B)
     """
     curve_a = bz_curve(cpa1, cpa2)
     curve_b = bz_curve(cpb1, cpb2)
@@ -624,7 +633,7 @@ def test_intersect():
 
 def bez_split(cp1: ControlPoint, cp2: ControlPoint, t=0.5)\
         -> Tuple[ControlPoint, ControlPoint, ControlPoint]:
-    """Split bezier curve in half.  Returns three new control points"""
+    """Split Bézier curve in half.  Returns three new control points"""
     def mid(p: BasePoint, q: BasePoint):
         return p + t*(q-p)
 

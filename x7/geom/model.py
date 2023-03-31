@@ -5,6 +5,7 @@ Code to describe models for animations
 import sys
 import math
 from abc import ABC, abstractmethod
+# noinspection PyPackageRequirements
 from PIL import Image, ImagePath
 from .drawing import DrawingContext
 from .typing import *
@@ -105,10 +106,14 @@ class Path(object):
         self.closed = closed
         self.points = points
 
-    def iterxy(self):
-        return xy_iter(self.points)
+    def extend(self, more_points: ImagePathType, closed=False) -> None:
+        """
+            Extend current path. :code:`closed` is a little lazy as it only makes
+            the addition closed, not the entire shape.
 
-    def extend(self, more_points: ImagePathType, closed=False):
+            :param more_points: additional points to add
+            :param closed: if true, connect back to the last point in current path to close added points
+        """
         curr_points = self.points.tolist()
         more_points = more_points.tolist()
         if closed:
@@ -174,6 +179,7 @@ class Elem(ABC):
 
     @abstractmethod
     def transform(self, matrix: Transform):
+        # noinspection GrazieInspection
         """
             Return a copy of this shape transformed by matrix.  .transform(identity) is like .copy().
 
@@ -213,7 +219,7 @@ class Elem(ABC):
             Just the control points, either as Point() for simple shapes like Rectangle or as
             ControlPoint() for curves
 
-            :return:
+            :returns: List of ControlPaths
         """
         ...
 
@@ -500,7 +506,7 @@ class ElemCurve(Elem):
             pts = []  # list(self.control_points[0].c.xy())
             skip = 0
             for p, q in zip(control_points, control_points[1:] + extra):
-                bez_pts = bez((p.c, p.r, q.l, q.c), steps=segments)
+                bez_pts = bez([p.c, p.r, q.l, q.c], steps=segments)
                 pts.extend(bez_pts[skip:])
                 skip = 2  # Skip first point going forward, as it is same as last point
 
@@ -1048,7 +1054,7 @@ class ElemWithHoles(Elem):
                     paths = elem.paths(dc)
                     for path in paths:
                         path.penbrush = edge_brush
-                        edges.extend(paths)
+                        edges.extend(paths)     # BUG? TODO - why extend with paths multiple times in this loop?
                         fill_path.extend(path.points, closed=True)
                 return [fill_path] + edges
             else:
@@ -1216,25 +1222,28 @@ class GroupBuilder(object):
     def rect(self, name, p1, p2, shape_kind=None, closed=True) -> ElemRectangle:
         """
             Create a sub-element and add to this group.
+
             :param name:
             :param p1:      A corner of the rectangle
             :param p2:      The other corner
             :param shape_kind:	Either a shape_kind (edged, filled, ...) or a PenBrush() value
             :param closed: True if shape is closed.  Defaults to filled
-            :return:
+            :returns: ElemRectangle
         """
         return cast(ElemRectangle, self.elem_any(ElemRectangle, name, shape_kind, closed, p1=p1, p2=p2))
 
     def rrect(self, name, p1, p2, radius, shape_kind=None, closed=True) -> ElemRectangleRounded:
+        # noinspection GrazieInspection
         """
             Create a sub-element and add to this group.
+
             :param name:
             :param p1:      A corner of the rectangle
             :param p2:      The other corner
             :param radius:  Corner radius
             :param shape_kind:	Either a shape_kind (edged, filled, ...) or a PenBrush() value
             :param closed: True if shape is closed.  Defaults to filled
-            :return:
+            :returns: ElemRectangleRounded
         """
         elem = self.elem_any(ElemRectangleRounded, name, shape_kind, closed, p1=p1, p2=p2, radius=radius)
         return cast(ElemRectangleRounded, elem)
@@ -1242,23 +1251,26 @@ class GroupBuilder(object):
     def ellipse(self, name, p1, p2, shape_kind=None, closed=True) -> ElemEllipse:
         """
             Create a sub-element and add to this group.
+
             :param name:
             :param p1:      A corner of the bounding rectangle
             :param p2:      The other corner
             :param shape_kind:	Either a shape_kind (edged, filled, ...) or a PenBrush() value
             :param closed: True if shape is closed.  Defaults to filled
-            :return:
+
+            :returns: ElemEllipse
         """
         return cast(ElemEllipse, self.elem_any(ElemEllipse, name, shape_kind, closed, p1=p1, p2=p2))
 
     def curve(self, name, cps: List[ControlPoint], shape_kind=None, closed=None) -> ElemCurve:
         """
             Create a sub-element and add to this group.
+
             :param name:
             :param cps:    The control points
             :param shape_kind:	Either a shape_kind (edged, filled, ...) or a PenBrush() value
             :param closed: True if shape is closed.  Defaults to filled
-            :return:
+            :returns: ElemCurve
         """
         return cast(ElemCurve, self.elem_any(ElemCurve, name, shape_kind, closed, control_points=cps))
 

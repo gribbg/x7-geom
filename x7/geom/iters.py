@@ -13,11 +13,12 @@ def iter_rotate_old(data: Union[str, Collection, Iterable], rotations=2, offset=
         Return zip(list[offset:], list[offset+1:]...).  Usage:
             for x, y, z in iter_rotate(data, 3, -1):
                 ...
+
         :param data:    list or string
         :param rotations:   number of times to repeat the data
         :param offset:      offset for first rotation
         :param cycle:       cycle back to start
-        :return: zip()
+        :returns: zip()
     """
     offset = offset % len(data)
     if cycle:

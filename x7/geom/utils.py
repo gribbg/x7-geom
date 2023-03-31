@@ -66,13 +66,14 @@ def path_from_xy(xy: XYList) -> PointList:
 def arc(r: float, sa: float, ea: float, c=Point(0, 0), steps=-1, direction='ccw') -> XYList:
     """
         Generate an arc of radius r about c as a list of x,y pairs
+
         :param r:   Radius of arc
         :param sa:  Start angle in degrees
         :param ea:  End angle in degrees
         :param c:   Center of arc
         :param steps: steps (defaults to 1 step per degree)
         :param direction: direction to travel around circle: ccw, cw, or none (no adjustments to angles)
-        :return:    List of (x, y)
+        :returns:    List of (x, y)
     """
     if direction == 'ccw':
         sa = sa % 360
@@ -92,12 +93,13 @@ def arc(r: float, sa: float, ea: float, c=Point(0, 0), steps=-1, direction='ccw'
 def arc2p(r: float, s: Point, e: Point, steps=-1, side=1) -> XYList:
     """
         Generate an arc of radius r about c as a list of x,y pairs
+
         :param r:   Radius of arc
         :param s:   Start point
         :param e:   End point
         :param steps: steps (defaults to 1 step per degree)
         :param side: positive or negative value to determine arc side
-        :return:    List of (x, y)
+        :returns:    List of (x, y)
     """
     v: Vector = e-s
     vl = v.length() / 2
@@ -150,15 +152,15 @@ def arc_animate():
             plot(circle(0.1, Point(-4, 4)), 'lightgrey', plotter=ax)
             plot(circle(0.1, Point(4, -4)), 'lightgrey', plotter=ax)
 
-            for side, color, offset in [(1, 'blue', -1), (-1, 'red', 1)]: #[:1]:
+            for side, color, offset in [(1, 'blue', -1), (-1, 'red', 1)]:  # [:1]:
                 yv = Vector(0, -1).rotate(0)
                 p1 = yv.p
                 p2 = yv.rotate(angle).p
                 ov = Vector(offset, offset)
                 p1 = p1 + ov
                 p2 = p2 + ov
-                #plot(arc2p(1+1e-8, p1, p2, side=1 if angle > 180 else -1), color, plotter=ax)
-                #plot(arc2p(1+1e-8, p1, p2, side=1 if angle < 180 else -1), 'lightblue', plotter=ax)
+                # plot(arc2p(1+1e-8, p1, p2, side=1 if angle > 180 else -1), color, plotter=ax)
+                # plot(arc2p(1+1e-8, p1, p2, side=1 if angle < 180 else -1), 'lightblue', plotter=ax)
                 a1 = arc2p(1+1e-8, p1, p2, side=side)
                 a2 = arc2p(1+1e-8, p1, p2, side=-side)
                 c1 = a1[1]
@@ -191,10 +193,10 @@ def arc_test():
                 # p1, p2 = p2, p1
                 pass
             plot(arc2p(3, p1, p2, side=side)[3:], color)
-            #plot(arc2p(2, p1, p2, side=side), color)
-            #plot(arc2p(1, p1, p2, side=side), color)
-            #plot(arc2p(0.6, p1, p2, side=side), color)
-            #plot(arc2p(0.5, p1, p2, side=side), color)
+            # plot(arc2p(2, p1, p2, side=side), color)
+            # plot(arc2p(1, p1, p2, side=side), color)
+            # plot(arc2p(0.6, p1, p2, side=side), color)
+            # plot(arc2p(0.5, p1, p2, side=side), color)
         plot(circle(5), 'grey')
         plt.axis('equal')
         plot_show()
