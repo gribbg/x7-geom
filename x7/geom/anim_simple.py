@@ -4,6 +4,7 @@ Simple animations
 import math
 import sys
 import os
+# noinspection PyPackageRequirements
 from PIL import Image
 from typing import List
 
@@ -54,7 +55,7 @@ class SimpleAnimation(object):
         self.model_bbox = BBox(draw_bbox)
         self.steps = steps
         self.background = 'grey'
-        assert(t_low != t_high)
+        assert t_low != t_high
         self.t_low = t_low
         self.t_high = t_high
         self.frame_display_time = frame_display_time

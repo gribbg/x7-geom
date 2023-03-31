@@ -42,10 +42,10 @@ class PicklerExtensionGeom(support.PicklerExtension):
         """Pickle data and return str if possible, else return None"""
         def is_tuple_str_elem_transform(item):
             return isinstance(item, tuple) \
-                   and len(item) == 3 \
-                   and isinstance(item[0], str) \
-                   and isinstance(item[1], Elem) \
-                   and isinstance(item[2], Transform)
+                and len(item) == 3 \
+                and isinstance(item[0], str) \
+                and isinstance(item[1], Elem) \
+                and isinstance(item[2], Transform)
 
         def dump_one_elem(elem: Elem):
             """Dump a single Elem"""

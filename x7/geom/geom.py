@@ -347,7 +347,17 @@ class BasePoint(ABC, SupportsRound):
     @staticmethod
     def parse(pts: Points, allow_thruples=False):
         """
-            Parse sequence of Point objects, xy-tuples, or xy separate values
+            Parse sequence of Point objects, xy-tuples, or xy separate values::
+
+                >>> BasePoint.parse([1, 2, 3, 4])
+                [(1, 2), (3, 4)]
+                >>> BasePoint.parse([(1,2), 3, 4, (5, 6)])
+                [(1, 2), (3, 4), (5, 6)]
+                >>> BasePoint.parse([Point(1,2), Point(3, 4)])
+                [Point(1, 2), Point(3, 4)]
+                >>> BasePoint.parse([(1,2), (3, 4, 5), (7, 8, 'anything')], allow_thruples=True)
+                [(1, 2), (3, 4, 5), (7, 8, 'anything')]
+
             :returns: List of tuples or points.  Note: tuples might be thruples if allow is True.
         """
         out = []

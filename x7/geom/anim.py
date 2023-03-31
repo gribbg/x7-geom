@@ -3,13 +3,14 @@
 Demo of creating an animated GIF from a sequence of images
 
 * Based in part on the blog post "Vector Animations with Python" by @Zulko
-  (http://zulko.github.io/blog/2014/09/20/vector-animations-with-python/)
+  (https://zulko.github.io/blog/2014/09/20/vector-animations-with-python/)
 * Adapted for Pythonista/iOS by Luke Taylor (forum post: https://forum.omz-software.com/topic/2052/gif-art-in-python)
 """
 
 from __future__ import absolute_import
 import sys
 import bisect
+# noinspection PyPackageRequirements
 from PIL import Image
 from math import sin, cos, tau, radians
 
@@ -325,7 +326,7 @@ class Morph(Animation):
             return cp.c, cp.dl, cp.dr
 
         if t is None:
-            # Hidden hack--just move off screen
+            # Hidden hack--just move off-screen
             for morph in morph_cp:
                 morph.c.setxy(1e6, 1e6)
                 morph.dl.setxy(0, 0)
@@ -376,7 +377,7 @@ class MorphMultiStep(Animation):
 
         t = self.t_func(t)
         if t is None:
-            # Hidden hack--just move off screen
+            # Hidden hack--just move off-screen
             for morph_cp in morph_cps:
                 morph_cp.c.setxy(1e6, 1e6)
                 morph_cp.dl.setxy(0, 0)
@@ -620,8 +621,12 @@ def test_animations():
         x = wid * n - 45
         a = test.point('t%s_a' % n, x, -60)
         b = test.point('t%s_b' % n, x, 60)
-        e = test.curve_old('t%s' % n)
-        e.c((a, x + 10, -25, x - 10, 25, b))
+        v = Vector(10, 35)
+        cp_a = ControlPoint(a, -v, v)
+        cp_b = ControlPoint(b, -v, v)
+        # e = test.curve_old('t%s' % n)
+        # e.c((a, x + 10, -25, x - 10, 25, b))
+        test.curve('t%s' % n, [cp_a, cp_b])
         if n == 0:
             anims.add(AnimationLinear(a, Point(x - 10, -50)))
         elif n == 1:

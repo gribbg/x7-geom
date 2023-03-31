@@ -12,7 +12,7 @@ from .typing import *
 from .colors import *
 from .geom import *
 from .transform import *
-from x7.lib.iters import iter_rotate, xy_iter
+from x7.lib.iters import iter_rotate
 from .bezier import *
 
 
