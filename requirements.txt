@@ -1,4 +1,5 @@
-bezier==2020.5.19
+# For python 3.11, must use: env BEZIER_NO_EXTENSION=true python -m pip install --upgrade bezier --no-binary=bezier
+bezier
 numpy
 matplotlib
 pygifsicle
