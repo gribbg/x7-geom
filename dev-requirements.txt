@@ -1,5 +1,6 @@
-flake8
-sphinx
-setuptools
-twine
-wheel
+# Development requires x7-lib to be checked out in a parallel
+# directory so that the following include works (and some others).
+
+# Pycharm doesn't seem to parse this, so might require:
+#  % make init-dev
+-r ../x7-lib/dev-requirements.txt

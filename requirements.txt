@@ -4,5 +4,6 @@ numpy
 matplotlib
 pygifsicle
 scipy
-x7-lib
-x7-testing
+x7-lib>=0.6.1
+x7-testing>=0.6.0
+pillow

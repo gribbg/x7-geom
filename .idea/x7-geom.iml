@@ -7,6 +7,8 @@
       <excludeFolder url="file://$MODULE_DIR$/build" />
       <excludeFolder url="file://$MODULE_DIR$/dist" />
       <excludeFolder url="file://$MODULE_DIR$/x7_geom.egg-info" />
+      <excludeFolder url="file://$MODULE_DIR$/docs/_apidoc" />
+      <excludeFolder url="file://$MODULE_DIR$/docs/_build" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
