@@ -238,19 +238,7 @@ class Elem(ABC):
         #   Skinny line for all
 
         if draw.show_cps:
-            rad = Vector(5, 5)
-            for path in self.control_paths(draw):
-                for cp in path.points:
-                    if isinstance(cp, ControlPoint):
-                        draw.draw.line(cp.c.xy()+cp.l.xy(), fill='grey')
-                        draw.draw.line(cp.c.xy()+cp.r.xy(), fill='grey')
-                        draw.draw.ellipse((cp.l-rad).xy() + (cp.l+rad).xy(), outline='red', fill='grey')
-                        draw.draw.ellipse((cp.r-rad).xy() + (cp.r+rad).xy(), outline='red', fill='grey')
-                        draw.draw.rectangle((cp.c+rad).xy() + (cp.c-rad).xy(), outline='red', fill='grey')
-                    elif isinstance(cp, BasePoint):
-                        draw.draw.rectangle((cp+rad).xy() + (cp-rad).xy(), outline='red', fill='grey')
-                    else:
-                        raise TypeError('unknown control_path element: %r' % cp)
+            self.draw_control_points(draw)
 
         for path in self.paths(draw):
             p = path.points
@@ -278,22 +266,45 @@ class Elem(ABC):
             else:
                 draw.draw.line(p, fill=path.penbrush.stroke_color, width=width, joint='curve')
             if draw.debug:
-                if not do_outline:
-                    pass
-                # image.line(p.tolist() + [p[0]], fill='black', width=1)
+                self.draw_path_debug(draw, path, p, do_outline)
+
+    @staticmethod
+    def draw_path_debug(draw: DrawingContext, path, p, do_outline):
+        """Draw extra path info for debugging purposes"""
+
+        if not do_outline:
+            pass
+            # image.line(p.tolist() + [p[0]], fill='black', width=1)
+        else:
+            # TODO-draw_space?
+            rad = max(1, round(path.penbrush.stroke_width(draw.matrix))) / 2
+            # rad = draw.stroke_width(path.penbrush.pen.width) / 2
+            if rad > 2:
+                # Don't need to fill anything if radius is quite small
+                for ti, (x, y) in enumerate(p):
+                    # w = w0 + w0*ti/p_len
+                    coords = (x - rad, y - rad, x + rad, y + rad)
+                    if draw.prod:
+                        draw.draw.ellipse(coords, fill=path.penbrush.stroke_color)
+                    else:
+                        draw.draw.ellipse(coords, outline='red', fill=path.penbrush.stroke_color)
+
+    def draw_control_points(self, draw: DrawingContext):
+        """Draw the control paths"""
+
+        rad = Vector(5, 5)
+        for path in self.control_paths(draw):
+            for cp in path.points:
+                if isinstance(cp, ControlPoint):
+                    draw.draw.line(cp.c.xy() + cp.l.xy(), fill='grey')
+                    draw.draw.line(cp.c.xy() + cp.r.xy(), fill='grey')
+                    draw.draw.ellipse((cp.l - rad).xy() + (cp.l + rad).xy(), outline='red', fill='grey')
+                    draw.draw.ellipse((cp.r - rad).xy() + (cp.r + rad).xy(), outline='red', fill='grey')
+                    draw.draw.rectangle((cp.c + rad).xy() + (cp.c - rad).xy(), outline='red', fill='grey')
+                elif isinstance(cp, BasePoint):
+                    draw.draw.rectangle((cp + rad).xy() + (cp - rad).xy(), outline='red', fill='grey')
                 else:
-                    # TODO-draw_space?
-                    rad = max(1, round(path.penbrush.stroke_width(draw.matrix))) / 2
-                    # rad = draw.stroke_width(path.penbrush.pen.width) / 2
-                    if rad > 2:
-                        # Don't need to fill anything if radius is quite small
-                        for ti, (x, y) in enumerate(p):
-                            # w = w0 + w0*ti/p_len
-                            coords = (x - rad, y - rad, x + rad, y + rad)
-                            if draw.prod:
-                                draw.draw.ellipse(coords, fill=path.penbrush.stroke_color)
-                            else:
-                                draw.draw.ellipse(coords, outline='red', fill=path.penbrush.stroke_color)
+                    raise TypeError('unknown control_path element: %r' % cp)
 
     @abstractmethod
     def display(self, detail=1, prefix='') -> List:
@@ -1119,7 +1130,7 @@ class ElemWithHoles(Elem):
         print('%sOutside:' % prefix)
         self.outside.display(detail=detail, prefix=prefix + '  ')
         print('%sOutside:' % prefix)
-        for elem in sorted(self.inside):
+        for elem in self.inside:
             elem.display(detail=detail, prefix=prefix + '  ')
 
     def dump(self, context: Optional[DumpContext] = None) -> DumpContext:

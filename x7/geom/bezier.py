@@ -205,6 +205,7 @@ def bez_intersect_new(
 
 
 class BziNode(object):
+    # noinspection GrazieInspection
     """A curve-curve intersection point with possibly many different edges"""
 
     def __init__(self, center: Tuple[float, float]):

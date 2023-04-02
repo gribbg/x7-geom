@@ -79,7 +79,7 @@ class Transformer(ABC):
             :param np_pts:
             :returns: either NumpyArray or [(x, y, 1), ...]
         """
-        ...
+        ...     # pragma: no cover
 
     def transform(self, x, y) -> Tuple[float, float]:
         """Transform (x, y) to (x, y)"""

@@ -375,7 +375,7 @@ class BasePoint(ABC, SupportsRound):
                 val = a
             elif isinstance(a, tuple):
                 if allow_thruples:
-                    if not len(a) in [2, 3]:
+                    if not len(a) in {2, 3}:
                         raise ValueError('tuples must be x,y or x,y,a, not %s' % repr(a))
                 elif len(a) != 2:
                     raise ValueError('tuples must be x,y, not %s' % repr(a))
