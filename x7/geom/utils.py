@@ -139,6 +139,8 @@ def plus(r, c=Point(0, 0)) -> XYList:
 
 
 def arc_animate():
+    """animation test/example"""
+
     def update_example():
         rotate = [3]
 
@@ -163,8 +165,8 @@ def arc_animate():
                 # plot(arc2p(1+1e-8, p1, p2, side=1 if angle < 180 else -1), 'lightblue', plotter=ax)
                 a1 = arc2p(1+1e-8, p1, p2, side=side)
                 a2 = arc2p(1+1e-8, p1, p2, side=-side)
-                c1 = a1[1]
-                c2 = a2[1]
+                # c1 = a1[1]
+                # c2 = a2[1]
                 plot(a1, 'lightblue', plotter=ax)
                 plot(a2, color, plotter=ax)
                 # plot(arc2p(1+1e-8, p1, p2, side=-1), 'lightblue', plotter=ax)
@@ -226,5 +228,5 @@ def arc_test():
 
 
 if __name__ == '__main__':
-    arc_animate(); exit(0)
+    arc_animate(); exit(0)  # noqa
     arc_test()

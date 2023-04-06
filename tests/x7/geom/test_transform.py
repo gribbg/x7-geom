@@ -30,9 +30,9 @@ class TestTransformer(TestCaseGeomExtended):
     @tests(Transform.transform_width)
     def test_transform_width(self):
         t = Transform().scale(-2, 3)
-        self.assertEqual(2.5, t.transform_width(1))
+        self.assertAlmostEqual(2.5, t.transform_width(1))
         t = TransformerDummy(2, -2, 3, 4)
-        self.assertEqual(2, t.transform_width(1))
+        self.assertAlmostEqual(2, t.transform_width(1))
 
 
 @tests(Transform)

@@ -345,7 +345,7 @@ class CpBool(object):
             print('\n'.join(['  cpbs: ['] + ['    %s,' % cpb for cpb in cpbs] + [']']))
 
 
-def bez_self_intersect(orig_cps: List[ControlPoint], debug=False) -> List[List[ControlPoint]]:
+def bez_self_intersect(orig_cps: List[ControlPoint], debug=False) -> List[List[ControlPoint]]:  # noqa: C901 (complexity)
     """Return list of replacement curves or [] if no self intersections"""
 
     # all_curves: list of all curve segments and their intersection t-values/xy-values
