@@ -1,3 +1,5 @@
+# DO NOT EDIT: copied via dev_update. Checksum: 6d419372721e2c39eae7463ab0a88d3e
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -61,8 +63,8 @@ instance/
 .scrapy
 
 # Sphinx documentation
-docs/_build/
 docs/_apidoc/
+docs/_build/
 
 # PyBuilder
 target/

@@ -1,3 +1,5 @@
+# DO NOT EDIT: copied via dev_update. Checksum: 3e2998838f4efe491dc03b61a80dc2ad
+
 # Makefile for Sphinx documentation
 #
 

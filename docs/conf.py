@@ -1,3 +1,5 @@
+# DO NOT EDIT: copied via dev_update. Checksum: cfb50dddc7e21fadb680216ea8f498be
+
 # -*- coding: utf-8 -*-
 #
 # sample documentation build configuration file, created by

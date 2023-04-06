@@ -1,6 +1,9 @@
-# Development requires x7-lib to be checked out in a parallel
-# directory so that the following include works (and some others).
+# DO NOT EDIT: copied via dev_update. Checksum: 0c1ea1cd0b98eeaa55b589a5faabd689
 
-# Pycharm doesn't seem to parse this, so might require:
-#  % make init-dev
--r ../x7-lib/dev-requirements.txt
+# The expectation is that all x7 projects need these same tools for development
+coverage
+flake8
+sphinx
+setuptools
+twine
+wheel
