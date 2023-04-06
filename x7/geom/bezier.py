@@ -6,10 +6,8 @@ from .geom import *
 from .transform import *
 
 try:
-    import bezier as bz
-    BzCurve = bz.Curve
+    from bezier import Curve as BzCurve
 except ModuleNotFoundError:
-    bezier = None
     BzCurve = None
 
 
@@ -110,7 +108,7 @@ class ControlPoint(object):
 
 def bz_curve(cp1: ControlPoint, cp2: ControlPoint) -> BzCurve:
     nodes_a = np.array([tuple(p) for p in (cp1.c, cp1.r, cp2.l, cp2.c)]).T
-    return bz.Curve(nodes_a, 3)
+    return BzCurve(nodes_a, 3)
 
 
 def bz_plot(curves: List, points: PointList):
